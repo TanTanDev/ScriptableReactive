@@ -4,12 +4,13 @@ public class ReactivePropertyBase<T> : ScriptableObject
 {
     [SerializeField] protected T m_startValue;
 
-    protected readonly ReactiveProperty<T> m_property;
+    protected ReactiveProperty<T> m_property;
 
     public ReadOnlyReactiveProperty<T> Property {
         get { return m_property.ToReadOnlyReactiveProperty(); } }
 
-    public ReactivePropertyBase()
+    // Todo: evaluate potential problems, if it is possible to access the property before OnEnable is called
+    private void OnEnable()
     {
         m_property = new ReactiveProperty<T>(m_startValue);
     }
