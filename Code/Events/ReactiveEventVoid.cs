@@ -8,6 +8,6 @@ public class ReactiveEventVoid : ReactiveEventBase<VoidData>
     private VoidData m_voidData = new VoidData();
     public void OnNext()
     {
-        m_command.Execute(m_voidData);
+        base.OnNext(m_voidData);
     }
 }
