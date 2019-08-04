@@ -9,6 +9,11 @@ public class ReactivePropertyBase<T> : ScriptableObject
     public ReadOnlyReactiveProperty<T> Property {
         get { return m_property.ToReadOnlyReactiveProperty(); } }
 
+    public T GetStartValue()
+    {
+        return m_startValue;
+    }
+
     // Todo: evaluate potential problems, if it is possible to access the property before OnEnable is called
     private void OnEnable()
     {
