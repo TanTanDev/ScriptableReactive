@@ -14,6 +14,7 @@ public class ReactiveToolEditor : EditorWindow
     private string m_reactiveFolder = "ReactiveExtension";
     private bool m_makeConstProperty = true;
     private bool m_makeReactiveProperty = true;
+    private bool m_makeReactiveCollection = true;
     private bool m_makeReactiveEvent = true;
 
     private void OnGUI()
@@ -22,6 +23,7 @@ public class ReactiveToolEditor : EditorWindow
         m_reactiveFolder = EditorGUILayout.TextField("Path", m_reactiveFolder);
         m_makeConstProperty = EditorGUILayout.Toggle("Generate Const Property", m_makeConstProperty);
         m_makeReactiveProperty = EditorGUILayout.Toggle("Generate Reactive Property", m_makeReactiveProperty);
+        m_makeReactiveCollection = EditorGUILayout.Toggle("Generate Reactive Collection", m_makeReactiveCollection);
         m_makeReactiveEvent = EditorGUILayout.Toggle("Generate Event", m_makeReactiveEvent);
 
         EditorGUI.BeginDisabledGroup(true); 
@@ -37,6 +39,12 @@ public class ReactiveToolEditor : EditorWindow
             string fileName = GetFullPath("Properties", GetReactivePropertyFileName());
             EditorGUILayout.LabelField(fileName);
             EditorGUILayout.TextArea(GetReactivePropertyFile());
+        }
+        if (m_makeReactiveCollection)
+        {
+            string fileName = GetFullPath("Collections", GetReactivePropertyFileName());
+            EditorGUILayout.LabelField(fileName);
+            EditorGUILayout.TextArea(GetReactiveCollectionFile());
         }
         if (m_makeReactiveEvent)
         {
@@ -66,6 +74,8 @@ public class ReactiveToolEditor : EditorWindow
             GenerateReactiveEvent();
         if (m_makeReactiveProperty)
             GenerateReactiveProperty();
+        if (m_makeReactiveCollection)
+            GenerateReactiveCollection();
         AssetDatabase.Refresh();
     }
 
@@ -82,6 +92,11 @@ public class ReactiveToolEditor : EditorWindow
     private string GetReactivePropertyFileName()
     {
         return "Reactive" + m_className + ".cs";
+    }
+
+    private string GetReactiveCollectionFileName()
+    {
+        return "Collection" + m_className + ".cs";
     }
 
     private string GetReactiveEventFileName()
@@ -114,6 +129,10 @@ public class ReactiveToolEditor : EditorWindow
         CreateFile(GetReactivePropertyFile(), GetReactivePropertyFileName(), "Properties");
     }
 
+    private void GenerateReactiveCollection()
+    {
+        CreateFile(GetReactiveCollectionFile(), GetReactiveCollectionFileName(), "Collections");
+    }
 
     private void GenerateReactiveEvent()
     {
@@ -143,6 +162,7 @@ public class ReactiveToolEditor : EditorWindow
             "}\n" +
             "\n";
     }
+
     private string GetReactivePropertyFile()
     {
         return
@@ -150,6 +170,18 @@ public class ReactiveToolEditor : EditorWindow
             "\n" +
             "[CreateAssetMenu(menuName = \"Reactive/Data/" + m_className + "\", fileName = \"R_P_{name}_" + m_className + "\")]\n" +
             "public class Reactive" + m_className + " : ReactivePropertyBase<" + m_className + ">\n" +
+            "{\n" +
+            "}\n" +
+            "\n";
+    }
+
+    private string GetReactiveCollectionFile()
+    {
+        return
+            "using UnityEngine;\n" +
+            "\n" +
+            "[CreateAssetMenu(menuName = \"Reactive/Collection/" + m_className + "\", fileName = \"R_C_{name}_" + m_className + "\")]\n" +
+            "public class ReactiveCollection" + m_className + " : ReactiveCollectionBase<" + m_className + ">\n" +
             "{\n" +
             "}\n" +
             "\n";
